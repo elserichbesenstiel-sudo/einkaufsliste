@@ -1,19 +1,13 @@
 {
-  "name": "Einkaufsliste",
-  "short_name": "Einkaufsliste",
-  "start_url": "/einkaufsliste/",
-  "scope": "/einkaufsliste/",
+  "name": "Smart Shopping",
+  "short_name": "Einkauf",
+  "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#0b1220",
-  "theme_color": "#0b1220",
+  "background_color": "#f8f9fa",
+  "theme_color": "#2ecc71",
   "icons": [
     {
-      "src": "/einkaufsliste/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/einkaufsliste/icon-512.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/2331/2331970.png",
       "sizes": "512x512",
       "type": "image/png"
     }
