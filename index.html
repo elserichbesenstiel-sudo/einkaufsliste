@@ -7,111 +7,58 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <style>
         :root {
-            --bg: #f2f4f7;
-            --card: #ffffff;
-            --primary: #4361ee;
-            --text: #1e293b;
-            --muted: #64748b;
-            --border: #e2e8f0;
-            --shadow: rgba(0, 0, 0, 0.05);
-            --safe-green: #06d6a0;
+            --bg: #f2f4f7; --card: #ffffff; --primary: #4361ee; --text: #1e293b;
+            --muted: #64748b; --border: #e2e8f0; --shadow: rgba(0, 0, 0, 0.05); --safe-green: #06d6a0;
         }
-
         [data-theme="dark"] {
-            --bg: #0f172a;
-            --card: #1e293b;
-            --primary: #4895ef;
-            --text: #f8fafc;
-            --muted: #94a3b8;
-            --border: #334155;
-            --shadow: rgba(0, 0, 0, 0.2);
+            --bg: #0f172a; --card: #1e293b; --primary: #4895ef; --text: #f8fafc;
+            --muted: #94a3b8; --border: #334155; --shadow: rgba(0, 0, 0, 0.2);
         }
-
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: all 0.2s ease; }
-
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 20px 15px 40px;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-            overflow-x: hidden; /* Verhindert horizontales Scrollen */
+            font-family: 'Inter', -apple-system, sans-serif; background-color: var(--bg); color: var(--text);
+            margin: 0; padding: 20px 15px 60px; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden;
         }
-
         .dashboard { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 16px; }
-
         .header { display: flex; justify-content: space-between; align-items: center; }
         .logo-area { display: flex; align-items: center; gap: 8px; }
         h1 { font-size: 1.4rem; font-weight: 800; margin: 0; background: linear-gradient(90deg, var(--primary), #7209b7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
+        
         .theme-toggle {
             background: var(--card); border: 1px solid var(--border); color: var(--text);
             width: 40px; height: 40px; border-radius: 10px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 6px var(--shadow);
+            display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px var(--shadow);
         }
-
         .budget-card {
             background: var(--card); border-radius: 20px; padding: 20px;
             box-shadow: 0 8px 20px var(--shadow); border: 1px solid var(--border);
         }
-
         .budget-val { font-size: 2.2rem; font-weight: 800; color: var(--text); margin: 6px 0; }
         .label-row { display: flex; align-items: center; gap: 6px; font-size: 0.7rem; color: var(--muted); text-transform: uppercase; font-weight: 700; }
-
-        /* Eingabebereich korrigiert */
+        
         .input-group { 
             display: flex; gap: 8px; background: var(--card); padding: 6px; border-radius: 14px; 
             border: 1px solid var(--border); box-shadow: 0 4px 10px var(--shadow); align-items: center;
-            width: 100%;
         }
-        
         .input-group input { flex: 1; border: none; padding: 10px; font-size: 1rem; outline: none; background: transparent; color: var(--text); min-width: 0; }
-        
-        .add-btn { 
-            background: var(--primary); color: white; border: none; width: 42px; height: 42px;
-            border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0; /* Verhindert, dass der Button gequetscht wird */
-        }
+        .add-btn { background: var(--primary); color: white; border: none; width: 42px; height: 42px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-        .item-card { 
-            background: var(--card); border-radius: 16px; padding: 14px; 
-            border: 1px solid var(--border); margin-bottom: 10px;
-            box-shadow: 0 2px 4px var(--shadow);
-        }
-        
+        .section-title { font-size: 0.75rem; font-weight: 800; color: var(--muted); text-transform: uppercase; margin-top: 10px; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
+
+        .item-card { background: var(--card); border-radius: 16px; padding: 14px; border: 1px solid var(--border); margin-bottom: 10px; box-shadow: 0 2px 4px var(--shadow); }
         .item-main { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
         .item-name { font-weight: 700; font-size: 1.05rem; word-break: break-word; }
-        
-        .saving-tip { 
-            background: rgba(6, 214, 160, 0.1); color: #06d6a0; border: 1px solid rgba(6, 214, 160, 0.2);
-            padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; margin-top: 10px; display: inline-flex; align-items: center; gap: 5px;
-        }
+        .saving-tip { background: rgba(6, 214, 160, 0.1); color: #06d6a0; border: 1px solid rgba(6, 214, 160, 0.2); padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; margin-top: 10px; display: inline-flex; align-items: center; gap: 5px; }
 
-        /* Preis-Zeile innerhalb der Karte gefixt */
-        .price-row { 
-            display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; 
-            border-top: 1px solid var(--border); width: 100%;
-        }
-        
-        .price-row input { 
-            background: var(--bg); border: 1px solid var(--border); border-radius: 8px; 
-            padding: 10px; font-size: 0.9rem; color: var(--text); outline: none; width: 100%; min-width: 0;
-        }
-        
-        .ok-btn { 
-            background: var(--safe-green); color: white; border: none; border-radius: 8px; 
-            width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; flex-shrink: 0;
-        }
+        .price-row { display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); width: 100%; }
+        .price-row input { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px; font-size: 0.9rem; color: var(--text); outline: none; width: 100%; min-width: 0; }
+        .ok-btn { background: var(--safe-green); color: white; border: none; border-radius: 8px; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
 
         .progress-container { background: var(--border); height: 6px; border-radius: 10px; margin-top: 16px; overflow: hidden; }
         .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #4cc9f0); }
         
-        .done { opacity: 0.6; }
+        .bought { opacity: 0.5; filter: grayscale(0.5); }
+        .bought .item-name { text-decoration: line-through; }
         .icon-btn { background: none; border: none; color: var(--muted); cursor: pointer; padding: 4px; display: flex; align-items: center; }
     </style>
 </head>
@@ -124,6 +71,7 @@
             <h1>Smart List</h1>
         </div>
         <div style="display: flex; gap: 8px;">
+            <button class="icon-btn" onclick="clearBoughtItems()" title="Erledigte löschen"><span class="material-icons-round">delete_sweep</span></button>
             <button class="icon-btn" onclick="setBudget()"><span class="material-icons-round">tune</span></button>
             <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn"><span class="material-icons-round">dark_mode</span></button>
         </div>
@@ -133,27 +81,25 @@
         <div class="label-row"><span class="material-icons-round" style="font-size: 14px">payments</span> Budget Rest</div>
         <div class="budget-val" id="rem-budget">0.00€</div>
         <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight: 600;">
-            <span id="save-potential" style="color: var(--safe-green); display: flex; align-items: center; gap: 3px;">
-                <span class="material-icons-round" style="font-size: 14px">auto_awesome</span> 0.00€
-            </span>
-            <span id="spent-info" style="color: var(--muted); display: flex; align-items: center; gap: 3px;">
-                <span class="material-icons-round" style="font-size: 14px">history</span> Woche: 0.00€
-            </span>
+            <span id="save-potential" style="color: var(--safe-green); display: flex; align-items: center; gap: 3px;"><span class="material-icons-round" style="font-size: 14px">auto_awesome</span> 0.00€</span>
+            <span id="spent-info" style="color: var(--muted); display: flex; align-items: center; gap: 3px;"><span class="material-icons-round" style="font-size: 14px">history</span> Woche: 0.00€</span>
         </div>
         <div class="progress-container"><div class="progress-fill" id="budget-bar"></div></div>
     </div>
 
     <div class="input-group">
-        <span class="material-icons-round" style="color: var(--muted); margin-left: 8px;">search</span>
-        <input type="text" id="new-item" placeholder="Was kaufst du?" autocomplete="off">
+        <input type="text" id="new-item" placeholder="Was fehlt noch?" autocomplete="off">
         <button class="add-btn" onclick="addItem()"><span class="material-icons-round">add</span></button>
     </div>
 
-    <div id="list-container"></div>
+    <div class="section-title">Offen</div>
+    <div id="active-list"></div>
+
+    <div class="section-title">Erledigt</div>
+    <div id="bought-list"></div>
 </div>
 
 <script>
-    // Logik bleibt für Datenerhalt identisch
     let shoppingList = JSON.parse(localStorage.getItem('smart_list')) || [];
     let priceDatabase = JSON.parse(localStorage.getItem('price_db')) || {};
     let purchaseHistory = JSON.parse(localStorage.getItem('purchase_history')) || [];
@@ -167,21 +113,16 @@
         localStorage.setItem('theme', next);
     }
 
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-        document.body.setAttribute('data-theme', savedTheme);
-        document.getElementById('theme-btn').innerHTML = `<span class="material-icons-round">${savedTheme === 'light' ? 'dark_mode' : 'light_mode'}</span>`;
-    }
-
     function addItem() {
         const input = document.getElementById('new-item');
         if (!input.value.trim()) return;
-        shoppingList.push({ name: input.value.trim(), inCart: false });
+        shoppingList.push({ name: input.value.trim(), inCart: false, bought: false });
         input.value = '';
         saveAndRender();
     }
 
     function toggleCart(i) {
+        if (shoppingList[i].bought) return;
         shoppingList[i].inCart = !shoppingList[i].inCart;
         saveAndRender();
     }
@@ -194,9 +135,21 @@
             if (!priceDatabase[name]) priceDatabase[name] = [];
             priceDatabase[name].push({ price, store, timestamp: new Date().getTime() });
             purchaseHistory.unshift({ timestamp: new Date().getTime(), price, name });
+            
+            // Markiere als gekauft, statt zu löschen
+            shoppingList[index].bought = true;
+            shoppingList[index].inCart = false;
+            shoppingList[index].finalPrice = price;
+
             localStorage.setItem('price_db', JSON.stringify(priceDatabase));
             localStorage.setItem('purchase_history', JSON.stringify(purchaseHistory));
-            shoppingList.splice(index, 1);
+            saveAndRender();
+        }
+    }
+
+    function clearBoughtItems() {
+        if(confirm("Alle erledigten Artikel löschen?")) {
+            shoppingList = shoppingList.filter(item => !item.bought);
             saveAndRender();
         }
     }
@@ -207,14 +160,16 @@
     }
 
     function render() {
-        const container = document.getElementById('list-container');
-        container.innerHTML = '';
+        const activeContainer = document.getElementById('active-list');
+        const boughtContainer = document.getElementById('bought-list');
+        activeContainer.innerHTML = '';
+        boughtContainer.innerHTML = '';
         let potentialTotal = 0;
 
         shoppingList.forEach((item, i) => {
             const history = priceDatabase[item.name] || [];
             let tip = '';
-            if (history.length > 0) {
+            if (!item.bought && history.length > 0) {
                 const minPrice = Math.min(...history.map(h => h.price));
                 const lastPrice = history[history.length - 1].price;
                 if(minPrice < lastPrice) {
@@ -224,25 +179,29 @@
             }
 
             const div = document.createElement('div');
-            div.className = `item-card ${item.inCart ? 'done' : ''}`;
+            div.className = `item-card ${item.bought ? 'bought' : ''}`;
             div.innerHTML = `
                 <div class="item-main">
                     <div style="flex:1; display:flex; align-items:center; gap:12px;" onclick="toggleCart(${i})">
-                        <span class="material-icons-round" style="color: ${item.inCart ? 'var(--primary)' : 'var(--border)'}">${item.inCart ? 'check_circle' : 'panorama_fish_eye'}</span>
+                        <span class="material-icons-round" style="color: ${item.bought ? 'var(--safe-green)' : (item.inCart ? 'var(--primary)' : 'var(--border)')}">
+                            ${item.bought ? 'check_circle' : (item.inCart ? 'shopping_cart' : 'panorama_fish_eye')}
+                        </span>
                         <div>
-                            <div class="item-name">${item.name}</div>
+                            <div class="item-name">${item.name} ${item.bought ? `(${item.finalPrice.toFixed(2)}€)` : ''}</div>
                             ${tip}
                         </div>
                     </div>
                     <button class="icon-btn" onclick="shoppingList.splice(${i},1); saveAndRender()"><span class="material-icons-round">close</span></button>
                 </div>
-                ${item.inCart ? `<div class="price-row">
+                ${item.inCart && !item.bought ? `<div class="price-row">
                     <input type="text" id="store-${i}" placeholder="Laden">
                     <input type="text" id="price-${i}" placeholder="€">
                     <button class="ok-btn" onclick="savePrice(${i})"><span class="material-icons-round">done</span></button>
                 </div>` : ''}
             `;
-            container.appendChild(div);
+            
+            if (item.bought) boughtContainer.appendChild(div);
+            else activeContainer.appendChild(div);
         });
 
         const oneWeekAgo = new Date().getTime() - (7 * 24 * 60 * 60 * 1000);
