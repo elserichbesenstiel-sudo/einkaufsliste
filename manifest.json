@@ -1,7 +1,6 @@
 {
-  "id": "/einkaufsliste/",
   "name": "Einkaufsliste",
-  "short_name": "Liste",
+  "short_name": "Einkaufsliste",
   "start_url": "/einkaufsliste/",
   "scope": "/einkaufsliste/",
   "display": "standalone",
