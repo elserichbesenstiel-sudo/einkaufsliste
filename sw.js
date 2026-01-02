@@ -1,49 +1,35 @@
-const CACHE_NAME = "einkaufsliste-v2";
+const CACHE_NAME = "einkaufsliste-v3";
 
 const ASSETS = [
   "/einkaufsliste/",
   "/einkaufsliste/index.html",
   "/einkaufsliste/manifest.json",
-  "/einkaufsliste/sw.js",
   "/einkaufsliste/icon-192.png",
   "/einkaufsliste/icon-512.png"
-  // Wenn du CSS/JS separat hast, HIER ergänzen:
-  // "/einkaufsliste/style.css",
-  // "/einkaufsliste/main.js"
 ];
 
-self.addEventListener("install", (event) => {
+self.addEventListener("install", event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
   );
   self.skipWaiting();
 });
 
-self.addEventListener("activate", (event) => {
+self.addEventListener("activate", event => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.map((key) => (key !== CACHE_NAME ? caches.delete(key) : null)))
+    caches.keys().then(keys =>
+      Promise.all(keys.map(k => k !== CACHE_NAME && caches.delete(k)))
     )
   );
   self.clients.claim();
 });
 
-self.addEventListener("fetch", (event) => {
-  // Nur GET-Anfragen cachen (sicherer)
+self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
 
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-
-      return fetch(event.request)
-        .then((response) => {
-          // Optional: neue Dateien dynamisch nachcachen
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
-          return response;
-        })
-        .catch(() => caches.match("/einkaufsliste/")); // Fallback offline
-    })
+    caches.match(event.request).then(resp =>
+      resp || fetch(event.request)
+    )
   );
 });
