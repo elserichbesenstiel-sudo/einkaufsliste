@@ -2,168 +2,77 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Einkaufslist</title>
-    <meta name="theme-color" content="#0a0b10">
-    <link rel="manifest" href="manifest.json">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>EINKAUFSLISTE</title>
     <style>
         :root {
             --neon-blue: #00d2ff;
             --neon-orange: #ff9f43;
             --bg-dark: #0a0b10;
-            --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(0, 210, 255, 0.3);
+            --glass: rgba(20, 22, 30, 0.9);
+            --border: rgba(0, 210, 255, 0.4);
             --text: #e0e6ed;
         }
 
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg-dark);
-            background-image: radial-gradient(circle at 50% 10%, #1a1c2c 0%, #0a0b10 100%);
+            background-image: radial-gradient(circle at 50% 0%, #1a1c2c 0%, #0a0b10 100%);
+            background-attachment: fixed;
+            background-size: cover;
             color: var(--text);
             margin: 0;
-            padding: 15px;
+            padding: 20px 15px 40px 15px;
             display: flex;
             justify-content: center;
+            min-height: 100vh;
             overflow-x: hidden;
         }
 
-        .dashboard {
-            width: 100%;
-            max-width: 450px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+        .dashboard { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 15px; }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-        }
+        .header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 5px; }
+        h1 { color: var(--neon-orange); font-size: 1.1rem; text-transform: uppercase; letter-spacing: 2px; margin: 0; text-shadow: 0 0 10px rgba(255, 159, 67, 0.5); }
 
-        h1 {
-            color: var(--neon-orange);
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin: 0;
-            text-shadow: 0 0 10px rgba(255, 159, 67, 0.5);
-        }
-
-        /* Neon Cards */
         .neon-card {
             background: var(--glass);
             border: 1px solid var(--border);
             border-radius: 15px;
-            padding: 15px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            padding: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             position: relative;
         }
 
         .neon-card::after {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 3px; height: 100%;
-            background: var(--neon-blue);
-            box-shadow: 0 0 8px var(--neon-blue);
-            border-radius: 15px 0 0 15px;
+            content: ""; position: absolute; top: 0; left: 0; width: 3px; height: 100%;
+            background: var(--neon-blue); box-shadow: 0 0 8px var(--neon-blue); border-radius: 15px 0 0 15px;
         }
 
-        .budget-val {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--neon-blue);
-            margin: 5px 0;
-            text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
-        }
+        .budget-val { font-size: 2.2rem; font-weight: bold; color: var(--neon-blue); text-shadow: 0 0 15px rgba(0, 210, 255, 0.6); margin: 5px 0; }
+        .label { font-size: 0.7rem; text-transform: uppercase; opacity: 0.6; letter-spacing: 1px; }
 
-        .label { font-size: 0.7rem; text-transform: uppercase; opacity: 0.7; letter-spacing: 1px; }
+        .input-card { display: flex; gap: 8px; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
+        input { flex: 1; background: transparent; border: none; color: white; font-size: 1rem; outline: none; }
+        
+        .add-btn { background: var(--neon-orange); color: black; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; box-shadow: 0 0 10px var(--neon-orange); }
 
-        /* Input Group */
-        .input-card {
-            display: flex;
-            gap: 8px;
-            background: rgba(255,255,255,0.03);
-            padding: 10px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-            padding: 5px;
-        }
-
-        .add-btn {
-            background: var(--neon-orange);
-            color: black;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-weight: bold;
-            box-shadow: 0 0 10px var(--neon-orange);
-        }
-
-        /* List Items */
-        .item-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 10px;
-        }
-
+        .item-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; margin-bottom: 10px; }
         .item-main { display: flex; justify-content: space-between; align-items: center; }
+        .item-name { font-weight: bold; color: var(--neon-blue); text-transform: uppercase; font-size: 0.9rem; }
         
-        .item-info { cursor: pointer; flex: 1; }
-        .item-name { font-weight: bold; color: var(--neon-blue); }
-        
-        .saving-tip { 
-            color: var(--neon-orange); 
-            font-size: 0.75rem; 
-            margin-top: 5px; 
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+        .saving-tip { color: var(--neon-orange); font-size: 0.75rem; margin-top: 5px; font-weight: bold; }
 
-        /* Price Entry */
-        .price-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr auto;
-            gap: 5px;
-            margin-top: 10px;
-            background: rgba(0,0,0,0.3);
-            padding: 8px;
-            border-radius: 8px;
-        }
+        .price-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .price-row input { background: rgba(255,255,255,0.05); border: 1px solid #333; border-radius: 4px; padding: 8px; font-size: 0.8rem; }
+        .ok-btn { background: var(--neon-blue); color: black; border: none; border-radius: 4px; padding: 0 15px; font-weight: bold; }
 
-        .price-row input { 
-            background: rgba(255,255,255,0.05); 
-            border: 1px solid #333; 
-            border-radius: 4px;
-            padding: 5px;
-            font-size: 0.8rem;
-        }
-
-        .ok-btn { background: var(--neon-blue); color: black; border: none; border-radius: 4px; padding: 5px 10px; font-weight: bold; }
-
-        /* Progress Bar */
-        .bar-bg { background: rgba(255,255,255,0.1); height: 4px; border-radius: 2px; margin-top: 10px; }
-        .bar-fill { height: 100%; background: var(--neon-blue); box-shadow: 0 0 8px var(--neon-blue); border-radius: 2px; transition: width 0.5s; }
-
-        .done { opacity: 0.5; filter: grayscale(1); }
+        .bar-bg { background: rgba(255,255,255,0.1); height: 4px; border-radius: 2px; margin-top: 15px; }
+        .bar-fill { height: 100%; background: var(--neon-blue); box-shadow: 0 0 8px var(--neon-blue); transition: width 0.5s; }
+        .done { opacity: 0.4; filter: grayscale(1); }
     </style>
 </head>
 <body>
@@ -171,25 +80,24 @@
 <div class="dashboard">
     <div class="header">
         <h1>Neon Saver Hub</h1>
-        <button onclick="setBudget()" style="background:none; border:none; color:var(--neon-blue); font-size:0.7rem; border:1px solid var(--neon-blue); border-radius:4px; padding:2px 5px;">LIMIT</button>
+        <button onclick="setBudget()" style="background:none; border:1px solid var(--neon-blue); color:var(--neon-blue); font-size:0.6rem; border-radius:4px; padding:2px 8px;">CONFIG</button>
     </div>
 
     <div class="neon-card">
-        <div class="label">System Budget / Rest</div>
+        <div class="label">System Budget Remaining</div>
         <div class="budget-val" id="rem-budget">0.00€</div>
         <div style="display:flex; justify-content:space-between; font-size:0.7rem;">
-            <span id="save-potential" style="color:var(--neon-orange)">Spar-Potential: 0.00€</span>
-            <span id="spent-info">Woche: 0.00€</span>
+            <span id="save-potential" style="color:var(--neon-orange)">POTENTIAL: 0.00€</span>
+            <span id="spent-info">WEEK: 0.00€</span>
         </div>
         <div class="bar-bg"><div class="bar-fill" id="budget-bar" style="width: 0%"></div></div>
     </div>
 
     <div class="input-card">
-        <input type="text" id="new-item" placeholder="Scanne Artikel..." autocomplete="off">
+        <input type="text" id="new-item" placeholder="SCAN ITEM..." autocomplete="off">
         <button class="add-btn" onclick="addItem()">ADD</button>
     </div>
 
-    <div class="label" style="margin-top:10px">Active Mission / Liste</div>
     <div id="list-container"></div>
 </div>
 
@@ -214,7 +122,8 @@
 
     function savePrice(index) {
         const store = document.getElementById(`store-${index}`).value || '???';
-        const price = parseFloat(document.getElementById(`price-${index}`).value.replace(',', '.'));
+        const priceVal = document.getElementById(`price-${index}`).value.replace(',', '.');
+        const price = parseFloat(priceVal);
         if (price > 0) {
             const name = shoppingList[index].name;
             if (!priceDatabase[name]) priceDatabase[name] = [];
@@ -254,14 +163,14 @@
             div.className = `item-card ${item.inCart ? 'done' : ''}`;
             div.innerHTML = `
                 <div class="item-main">
-                    <div class="item-info" onclick="toggleCart(${i})">
-                        <div class="item-name">${item.name.toUpperCase()}</div>
+                    <div style="flex:1" onclick="toggleCart(${i})">
+                        <div class="item-name">${item.name}</div>
                         ${tip}
                     </div>
                     <button onclick="shoppingList.splice(${i},1); saveAndRender()" style="background:none; border:none; color:var(--neon-orange); font-size:1.2rem;">✕</button>
                 </div>
                 ${item.inCart ? `<div class="price-row">
-                    <input type="text" id="store-${i}" placeholder="LADEN">
+                    <input type="text" id="store-${i}" placeholder="STORE">
                     <input type="text" id="price-${i}" placeholder="€">
                     <button class="ok-btn" onclick="savePrice(${i})">OK</button>
                 </div>` : ''}
@@ -269,23 +178,21 @@
             container.appendChild(div);
         });
 
-        // Stats
         const oneWeekAgo = new Date().getTime() - (7 * 24 * 60 * 60 * 1000);
         const weekSpent = purchaseHistory.filter(p => p.timestamp > oneWeekAgo).reduce((s, p) => s + p.price, 0);
         const remaining = weeklyLimit - weekSpent;
         const perc = Math.min((weekSpent / weeklyLimit) * 100, 100);
 
         document.getElementById('rem-budget').innerText = remaining.toFixed(2) + "€";
-        document.getElementById('spent-info').innerText = `WOCHE: ${weekSpent.toFixed(2)}€`;
-        document.getElementById('save-potential').innerText = `SPAR-POTENTIAL: ${potentialTotal.toFixed(2)}€`;
+        document.getElementById('spent-info').innerText = `WEEK: ${weekSpent.toFixed(2)}€`;
+        document.getElementById('save-potential').innerText = `POTENTIAL: ${potentialTotal.toFixed(2)}€`;
         document.getElementById('budget-bar').style.width = perc + "%";
     }
 
     function setBudget() {
-        const b = prompt("Wochen-Limit setzen:", weeklyLimit);
-        if(b) { weeklyLimit = parseFloat(b); localStorage.setItem('weekly_limit', b); render(); }
+        const b = prompt("Weekly Limit:", weeklyLimit);
+        if(b) { weeklyLimit = parseFloat(b.replace(',','.')); localStorage.setItem('weekly_limit', weeklyLimit); render(); }
     }
-
     render();
 </script>
 </body>
