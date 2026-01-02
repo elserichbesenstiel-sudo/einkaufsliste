@@ -2,57 +2,163 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meine Einkaufsliste </title>
-    <meta name="theme-color" content="#2ecc71">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Einkaufsliste</title>
+    <meta name="theme-color" content="#42b983">
     <link rel="manifest" href="manifest.json">
     <style>
-        :root { --main: #2ecc71; --dark: #2c3e50; --bg: #f8f9fa; }
-        body { font-family: sans-serif; background: var(--bg); margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .app-container { width: 100%; max-width: 500px; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: var(--dark); font-size: 1.5rem; }
+        :root {
+            --primary: #42b983;
+            --bg: #f5f7fa;
+            --card: #ffffff;
+            --text: #2c3e50;
+            --text-light: #95a5a6;
+            --danger: #ff5f5f;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: env(safe-area-inset-top) 15px 40px 15px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        header {
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        h1 { margin: 0; font-size: 1.8rem; letter-spacing: -1px; }
+
+        .input-card {
+            background: var(--card);
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            border: none;
+            background: #f0f2f5;
+            padding: 12px 15px;
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .add-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        ul { list-style: none; padding: 0; margin: 0; }
+
+        li {
+            background: var(--card);
+            margin-bottom: 12px;
+            padding: 15px;
+            border-radius: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: transform 0.1s;
+        }
+
+        .item-main { display: flex; align-items: center; justify-content: space-between; }
         
-        /* Eingabebereich */
-        .input-section { display: flex; gap: 8px; margin-bottom: 20px; }
-        input[type="text"] { flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 8px; outline: none; }
-        input[type="text"]:focus { border-color: var(--main); }
-        .add-btn { background: var(--main); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .item-info { display: flex; align-items: center; gap: 12px; flex: 1; cursor: pointer; }
 
-        /* Liste */
-        ul { list-style: none; padding: 0; }
-        li { background: white; border: 1px solid #eee; margin-bottom: 10px; border-radius: 10px; padding: 12px; transition: 0.3s; }
-        .item-row { display: flex; justify-content: space-between; align-items: center; }
-        .item-info { cursor: pointer; flex: 1; }
-        .item-name { font-weight: bold; font-size: 1.1rem; }
-        .price-tag { font-size: 0.85rem; color: #7f8c8d; display: block; }
-        .done { text-decoration: line-through; color: #bdc3c7; }
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
 
-        /* Preis-Eingabe Bereich (erscheint wenn im Wagen) */
-        .receipt-area { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #ddd; display: flex; gap: 5px; }
-        .receipt-area input { width: 30%; padding: 5px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.8rem; }
-        .save-price-btn { background: var(--dark); color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 0.8rem; }
+        .done .checkbox { background: var(--primary); border-color: var(--primary); }
+        .done .checkbox::after { content: '✓'; color: white; font-size: 14px; }
+        .done .item-name { text-decoration: line-through; color: var(--text-light); }
 
-        .delete-btn { color: #e74c3c; background: none; border: none; font-size: 1.2rem; cursor: pointer; }
-        
-        .history-box { margin-top: 30px; padding: 15px; background: #f1f2f6; border-radius: 10px; font-size: 0.9rem; }
+        .item-name { font-weight: 600; font-size: 1.1rem; }
+        .price-info { font-size: 0.8rem; color: var(--text-light); display: block; margin-top: 2px; }
+
+        .delete-btn { color: #ccc; background: none; border: none; font-size: 1.5rem; padding: 0 5px; cursor: pointer; }
+        .delete-btn:hover { color: var(--danger); }
+
+        /* Preis-Eingabe-Bereich */
+        .receipt-form {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 8px;
+        }
+
+        .receipt-form input {
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 0.9rem;
+        }
+
+        .save-btn {
+            background: var(--text);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+        }
+
+        .history-card {
+            margin-top: 40px;
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 20px;
+        }
+
+        .history-card h3 { margin-top: 0; font-size: 1rem; opacity: 0.8; }
+        .history-list { font-size: 0.9rem; opacity: 0.9; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <h1>🛒 Smart Shopping</h1>
+    <header>
+        <h1>🛒 Smart List</h1>
+    </header>
     
-    <div class="input-section">
+    <div class="input-card">
         <input type="text" id="new-item" placeholder="Artikel hinzufügen..." autocomplete="off">
         <button class="add-btn" onclick="addItem()">+</button>
     </div>
 
     <ul id="list-container"></ul>
 
-    <div class="history-box">
-        <strong>💡 Preis-Check:</strong>
-        <div id="price-history">Trage Preise ein, um Vergleiche zu sehen.</div>
-    </div>
+    <div id="history-section"></div>
 </div>
 
 <script>
@@ -61,13 +167,11 @@
 
     function addItem() {
         const input = document.getElementById('new-item');
-        if (input.value.trim() === '') return;
+        if (!input.value.trim()) return;
         
         shoppingList.push({
             name: input.value.trim(),
-            inCart: false,
-            lastPrice: priceDatabase[input.value.trim()]?.price || null,
-            lastStore: priceDatabase[input.value.trim()]?.store || null
+            inCart: false
         });
         
         input.value = '';
@@ -79,16 +183,15 @@
         saveAndRender();
     }
 
-    function saveReceipt(index) {
-        const store = document.getElementById(`store-${index}`).value;
+    function savePrice(index) {
+        const store = document.getElementById(`store-${index}`).value || 'Unbekannt';
         const price = document.getElementById(`price-${index}`).value;
-        const itemName = shoppingList[index].name;
+        const name = shoppingList[index].name;
 
         if (price) {
-            priceDatabase[itemName] = { price: price, store: store, date: new Date().toLocaleDateString() };
+            priceDatabase[name] = { price: price, store: store };
             localStorage.setItem('price_db', JSON.stringify(priceDatabase));
-            alert(`Gespeichert: ${itemName} für ${price}€ bei ${store}`);
-            renderHistory();
+            saveAndRender();
         }
     }
 
@@ -108,24 +211,26 @@
         container.innerHTML = '';
 
         shoppingList.forEach((item, i) => {
+            const history = priceDatabase[item.name];
             const li = document.createElement('li');
-            const historyInfo = priceDatabase[item.name] 
-                ? `<span class="price-tag">Letzter Preis: ${priceDatabase[item.name].price}€ (${priceDatabase[item.name].store})</span>` 
-                : '<span class="price-tag">Noch kein Preis bekannt</span>';
+            if(item.inCart) li.className = 'done';
 
             li.innerHTML = `
-                <div class="item-row">
-                    <div class="item-info ${item.inCart ? 'done' : ''}" onclick="toggleCart(${i})">
-                        <span class="item-name">${item.inCart ? '✅' : '⚪'} ${item.name}</span>
-                        ${historyInfo}
+                <div class="item-main">
+                    <div class="item-info" onclick="toggleCart(${i})">
+                        <div class="checkbox"></div>
+                        <div>
+                            <span class="item-name">${item.name}</span>
+                            <span class="price-info">${history ? `Zuletzt: ${history.price}€ (${history.store})` : 'Kein Preis bekannt'}</span>
+                        </div>
                     </div>
-                    <button class="delete-btn" onclick="deleteItem(${i})">✕</button>
+                    <button class="delete-btn" onclick="deleteItem(${i})">×</button>
                 </div>
                 ${item.inCart ? `
-                    <div class="receipt-area">
-                        <input type="text" id="store-${i}" placeholder="Laden (z.B. Aldi)">
-                        <input type="number" id="price-${i}" placeholder="Preis €" step="0.01">
-                        <button class="save-price-btn" onclick="saveReceipt(${i})">Speichern</button>
+                    <div class="receipt-form">
+                        <input type="text" id="store-${i}" placeholder="Laden">
+                        <input type="number" id="price-${i}" placeholder="€" step="0.01">
+                        <button class="save-btn" onclick="savePrice(${i})">OK</button>
                     </div>
                 ` : ''}
             `;
@@ -134,18 +239,20 @@
     }
 
     function renderHistory() {
-        const historyDiv = document.getElementById('price-history');
-        if (Object.keys(priceDatabase).length === 0) return;
-        
-        let html = '<ul>';
-        for (let name in priceDatabase) {
-            html += `<li>${name}: <b>${priceDatabase[name].price}€</b> bei ${priceDatabase[name].store}</li>`;
+        const section = document.getElementById('history-section');
+        if (Object.keys(priceDatabase).length === 0) {
+            section.innerHTML = '';
+            return;
         }
-        html += '</ul>';
-        historyDiv.innerHTML = html;
+
+        let html = `<div class="history-card"><h3>💡 Preis-Historie</h3><div class="history-list">`;
+        for (let name in priceDatabase) {
+            html += `<div>${name}: <b>${priceDatabase[name].price}€</b> (${priceDatabase[name].store})</div>`;
+        }
+        html += `</div></div>`;
+        section.innerHTML = html;
     }
 
-    // Initiales Rendern
     saveAndRender();
 </script>
 </body>
