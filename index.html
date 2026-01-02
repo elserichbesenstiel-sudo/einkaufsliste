@@ -3,65 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Einkaufsliste</title>
-    <meta name="theme-color" content="#4834d4">
+    <title>Einkaufslist</title>
+    <meta name="theme-color" content="#0a0b10">
     <link rel="manifest" href="manifest.json">
     <style>
-        :root { --accent: #4834d4; --bg: #f0f3f7; --card-bg: #ffffff; --text-main: #2d3436; --text-muted: #636e72; --success: #2ecc71; --warning: #f1c40f; --danger: #e74c3c; --saving: #00b894; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .dashboard { width: 100%; max-width: 500px; display: grid; grid-template-columns: 1fr; gap: 15px; }
-        h1 { margin: 0; font-size: 1.4rem; font-weight: 800; color: var(--accent); }
+        :root {
+            --neon-blue: #00d2ff;
+            --neon-orange: #ff9f43;
+            --bg-dark: #0a0b10;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(0, 210, 255, 0.3);
+            --text: #e0e6ed;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% 10%, #1a1c2c 0%, #0a0b10 100%);
+            color: var(--text);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        .dashboard {
+            width: 100%;
+            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        h1 {
+            color: var(--neon-orange);
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+            text-shadow: 0 0 10px rgba(255, 159, 67, 0.5);
+        }
+
+        /* Neon Cards */
+        .neon-card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .neon-card::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 3px; height: 100%;
+            background: var(--neon-blue);
+            box-shadow: 0 0 8px var(--neon-blue);
+            border-radius: 15px 0 0 15px;
+        }
+
+        .budget-val {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--neon-blue);
+            margin: 5px 0;
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+        }
+
+        .label { font-size: 0.7rem; text-transform: uppercase; opacity: 0.7; letter-spacing: 1px; }
+
+        /* Input Group */
+        .input-card {
+            display: flex;
+            gap: 8px;
+            background: rgba(255,255,255,0.03);
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            padding: 5px;
+        }
+
+        .add-btn {
+            background: var(--neon-orange);
+            color: black;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            box-shadow: 0 0 10px var(--neon-orange);
+        }
+
+        /* List Items */
+        .item-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .item-main { display: flex; justify-content: space-between; align-items: center; }
         
-        /* Budget & Spar Card */
-        .budget-card { background: linear-gradient(135deg, #686de0, #4834d4); color: white; padding: 20px; border-radius: 20px; box-shadow: 0 8px 20px rgba(72, 52, 212, 0.2); position: relative; overflow: hidden; }
-        .budget-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .budget-value { font-size: 1.8rem; font-weight: bold; }
-        .savings-badge { background: var(--saving); color: white; padding: 5px 10px; border-radius: 10px; font-size: 0.75rem; font-weight: bold; margin-top: 10px; display: inline-block; }
+        .item-info { cursor: pointer; flex: 1; }
+        .item-name { font-weight: bold; color: var(--neon-blue); }
         
-        .card { background: var(--card-bg); padding: 15px; border-radius: 18px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        .input-group { display: flex; gap: 10px; }
-        input { flex: 1; border: 1px solid #dfe6e9; padding: 12px; border-radius: 12px; font-size: 16px; outline: none; background: #f9f9f9; }
-        .add-btn { background: var(--accent); color: white; border: none; padding: 0 20px; border-radius: 12px; font-weight: bold; cursor: pointer; }
-        
-        ul { list-style: none; padding: 0; margin: 0; }
-        .item-card { background: var(--card-bg); margin-bottom: 10px; padding: 15px; border-radius: 15px; border-left: 5px solid transparent; }
-        .item-card.has-saving { border-left-color: var(--warning); }
-        .item-header { display: flex; align-items: center; justify-content: space-between; }
-        .item-info { display: flex; align-items: center; gap: 12px; cursor: pointer; flex: 1; }
-        
-        .saving-tip { color: var(--saving); font-size: 0.75rem; font-weight: bold; margin-top: 5px; display: flex; align-items: center; gap: 4px; }
-        
-        .price-input-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; background: #f8f9fa; padding: 10px; border-radius: 10px; margin-top: 10px; }
-        .btn-sm { background: var(--success); color: white; border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer; font-weight: bold; }
+        .saving-tip { 
+            color: var(--neon-orange); 
+            font-size: 0.75rem; 
+            margin-top: 5px; 
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Price Entry */
+        .price-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 5px;
+            margin-top: 10px;
+            background: rgba(0,0,0,0.3);
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .price-row input { 
+            background: rgba(255,255,255,0.05); 
+            border: 1px solid #333; 
+            border-radius: 4px;
+            padding: 5px;
+            font-size: 0.8rem;
+        }
+
+        .ok-btn { background: var(--neon-blue); color: black; border: none; border-radius: 4px; padding: 5px 10px; font-weight: bold; }
+
+        /* Progress Bar */
+        .bar-bg { background: rgba(255,255,255,0.1); height: 4px; border-radius: 2px; margin-top: 10px; }
+        .bar-fill { height: 100%; background: var(--neon-blue); box-shadow: 0 0 8px var(--neon-blue); border-radius: 2px; transition: width 0.5s; }
+
+        .done { opacity: 0.5; filter: grayscale(1); }
     </style>
 </head>
 <body>
 
 <div class="dashboard">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h1>Smart Saver</h1>
-        <button onclick="setBudget()" style="background:none; border:none; color:var(--text-muted); font-size:0.75rem; cursor:pointer;">Limit: <span id="limit-display">100</span>€</button>
+    <div class="header">
+        <h1>Neon Saver Hub</h1>
+        <button onclick="setBudget()" style="background:none; border:none; color:var(--neon-blue); font-size:0.7rem; border:1px solid var(--neon-blue); border-radius:4px; padding:2px 5px;">LIMIT</button>
     </div>
 
-    <div class="budget-card">
-        <div class="budget-header"><span>Restbudget Woche</span><span id="budget-percent">0%</span></div>
-        <div class="budget-value" id="remaining-budget">0.00€</div>
-        <div id="savings-total" class="savings-badge">💡 Spar-Potential heute: 0.00€</div>
-    </div>
-
-    <div class="card">
-        <div class="input-group">
-            <input type="text" id="new-item" placeholder="Was willst du kaufen?" autocomplete="off">
-            <button class="add-btn" onclick="addItem()">+</button>
+    <div class="neon-card">
+        <div class="label">System Budget / Rest</div>
+        <div class="budget-val" id="rem-budget">0.00€</div>
+        <div style="display:flex; justify-content:space-between; font-size:0.7rem;">
+            <span id="save-potential" style="color:var(--neon-orange)">Spar-Potential: 0.00€</span>
+            <span id="spent-info">Woche: 0.00€</span>
         </div>
+        <div class="bar-bg"><div class="bar-fill" id="budget-bar" style="width: 0%"></div></div>
     </div>
 
+    <div class="input-card">
+        <input type="text" id="new-item" placeholder="Scanne Artikel..." autocomplete="off">
+        <button class="add-btn" onclick="addItem()">ADD</button>
+    </div>
+
+    <div class="label" style="margin-top:10px">Active Mission / Liste</div>
     <div id="list-container"></div>
 </div>
 
 <script>
     let shoppingList = JSON.parse(localStorage.getItem('smart_list')) || [];
-    let priceDatabase = JSON.parse(localStorage.getItem('price_db')) || {}; // Format: { "Milch": [{price: 1.2, store: "Aldi"}, {price: 1.1, store: "Lidl"}] }
+    let priceDatabase = JSON.parse(localStorage.getItem('price_db')) || {};
     let purchaseHistory = JSON.parse(localStorage.getItem('purchase_history')) || [];
     let weeklyLimit = parseFloat(localStorage.getItem('weekly_limit')) || 100.00;
 
@@ -73,13 +207,18 @@
         saveAndRender();
     }
 
+    function toggleCart(i) {
+        shoppingList[i].inCart = !shoppingList[i].inCart;
+        saveAndRender();
+    }
+
     function savePrice(index) {
-        const store = document.getElementById(`store-${index}`).value || 'Laden';
+        const store = document.getElementById(`store-${index}`).value || '???';
         const price = parseFloat(document.getElementById(`price-${index}`).value.replace(',', '.'));
         if (price > 0) {
             const name = shoppingList[index].name;
             if (!priceDatabase[name]) priceDatabase[name] = [];
-            priceDatabase[name].push({ price, store, date: new Date().getTime() });
+            priceDatabase[name].push({ price, store, timestamp: new Date().getTime() });
             purchaseHistory.unshift({ timestamp: new Date().getTime(), price, name });
             localStorage.setItem('price_db', JSON.stringify(priceDatabase));
             localStorage.setItem('purchase_history', JSON.stringify(purchaseHistory));
@@ -96,39 +235,35 @@
     function render() {
         const container = document.getElementById('list-container');
         container.innerHTML = '';
-        let totalPotentialSavings = 0;
+        let potentialTotal = 0;
 
         shoppingList.forEach((item, i) => {
             const history = priceDatabase[item.name] || [];
-            let tipHtml = '';
-            
+            let tip = '';
             if (history.length > 0) {
-                const prices = history.map(h => h.price);
-                const minPrice = Math.min(...prices);
-                const lastPrice = history[history.length - 1].price;
+                const minPrice = Math.min(...history.map(h => h.price));
                 const bestStore = history.find(h => h.price === minPrice).store;
-
-                if (minPrice < lastPrice) {
-                    const diff = lastPrice - minPrice;
-                    totalPotentialSavings += diff;
-                    tipHtml = `<div class="saving-tip">💡 Günstiger bei ${bestStore} (-${diff.toFixed(2)}€)</div>`;
+                const lastPrice = history[history.length - 1].price;
+                if(minPrice < lastPrice) {
+                    potentialTotal += (lastPrice - minPrice);
+                    tip = `<div class="saving-tip">⚡ GÜNSTIGER BEI ${bestStore.toUpperCase()} (-${(lastPrice-minPrice).toFixed(2)}€)</div>`;
                 }
             }
 
             const div = document.createElement('div');
-            div.className = `item-card ${tipHtml ? 'has-saving' : ''} ${item.inCart ? 'done' : ''}`;
+            div.className = `item-card ${item.inCart ? 'done' : ''}`;
             div.innerHTML = `
-                <div class="item-header" onclick="toggleCart(${i})">
-                    <div class="item-info">
-                        <div style="font-weight:bold">${item.name}</div>
-                        ${tipHtml}
+                <div class="item-main">
+                    <div class="item-info" onclick="toggleCart(${i})">
+                        <div class="item-name">${item.name.toUpperCase()}</div>
+                        ${tip}
                     </div>
-                    <button onclick="event.stopPropagation(); deleteItem(${i})" style="border:none; background:none; color:#ccc;">✕</button>
+                    <button onclick="shoppingList.splice(${i},1); saveAndRender()" style="background:none; border:none; color:var(--neon-orange); font-size:1.2rem;">✕</button>
                 </div>
-                ${item.inCart ? `<div class="price-input-row">
-                    <input type="text" id="store-${i}" placeholder="Laden">
+                ${item.inCart ? `<div class="price-row">
+                    <input type="text" id="store-${i}" placeholder="LADEN">
                     <input type="text" id="price-${i}" placeholder="€">
-                    <button class="btn-sm" onclick="savePrice(${i})">OK</button>
+                    <button class="ok-btn" onclick="savePrice(${i})">OK</button>
                 </div>` : ''}
             `;
             container.appendChild(div);
@@ -137,15 +272,17 @@
         // Stats
         const oneWeekAgo = new Date().getTime() - (7 * 24 * 60 * 60 * 1000);
         const weekSpent = purchaseHistory.filter(p => p.timestamp > oneWeekAgo).reduce((s, p) => s + p.price, 0);
-        document.getElementById('remaining-budget').innerText = (weeklyLimit - weekSpent).toFixed(2) + "€";
-        document.getElementById('savings-total').innerText = `💡 Spar-Potential heute: ${totalPotentialSavings.toFixed(2)}€`;
-        document.getElementById('limit-display').innerText = weeklyLimit;
+        const remaining = weeklyLimit - weekSpent;
+        const perc = Math.min((weekSpent / weeklyLimit) * 100, 100);
+
+        document.getElementById('rem-budget').innerText = remaining.toFixed(2) + "€";
+        document.getElementById('spent-info').innerText = `WOCHE: ${weekSpent.toFixed(2)}€`;
+        document.getElementById('save-potential').innerText = `SPAR-POTENTIAL: ${potentialTotal.toFixed(2)}€`;
+        document.getElementById('budget-bar').style.width = perc + "%";
     }
 
-    function toggleCart(i) { shoppingList[i].inCart = !shoppingList[i].inCart; saveAndRender(); }
-    function deleteItem(i) { shoppingList.splice(i, 1); saveAndRender(); }
-    function setBudget() { 
-        const b = prompt("Wochenbudget?", weeklyLimit); 
+    function setBudget() {
+        const b = prompt("Wochen-Limit setzen:", weeklyLimit);
         if(b) { weeklyLimit = parseFloat(b); localStorage.setItem('weekly_limit', b); render(); }
     }
 
