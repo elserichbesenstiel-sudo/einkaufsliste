@@ -1,149 +1,152 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Shopping PWA</title>
+    <meta name="theme-color" content="#2ecc71">
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root { --main: #2ecc71; --dark: #2c3e50; --bg: #f8f9fa; }
+        body { font-family: sans-serif; background: var(--bg); margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .app-container { width: 100%; max-width: 500px; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: var(--dark); font-size: 1.5rem; }
+        
+        /* Eingabebereich */
+        .input-section { display: flex; gap: 8px; margin-bottom: 20px; }
+        input[type="text"] { flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 8px; outline: none; }
+        input[type="text"]:focus { border-color: var(--main); }
+        .add-btn { background: var(--main); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-  <title>Einkaufsliste</title>
+        /* Liste */
+        ul { list-style: none; padding: 0; }
+        li { background: white; border: 1px solid #eee; margin-bottom: 10px; border-radius: 10px; padding: 12px; transition: 0.3s; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; }
+        .item-info { cursor: pointer; flex: 1; }
+        .item-name { font-weight: bold; font-size: 1.1rem; }
+        .price-tag { font-size: 0.85rem; color: #7f8c8d; display: block; }
+        .done { text-decoration: line-through; color: #bdc3c7; }
 
-  <!-- PWA -->
-  <link rel="manifest" href="/einkaufsliste/manifest.json">
-  <meta name="theme-color" content="#0b1220">
-  <link rel="icon" href="/einkaufsliste/icon-192.png">
+        /* Preis-Eingabe Bereich (erscheint wenn im Wagen) */
+        .receipt-area { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #ddd; display: flex; gap: 5px; }
+        .receipt-area input { width: 30%; padding: 5px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.8rem; }
+        .save-price-btn { background: var(--dark); color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 0.8rem; }
 
-  <style>
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: radial-gradient(circle at top, #0f1c2e, #050b12);
-      color: #fff;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 24px;
-    }
-
-    .app {
-      width: 100%;
-      max-width: 420px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 20px;
-      padding: 20px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.5);
-    }
-
-    h1 {
-      margin-top: 0;
-      font-size: 1.6rem;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 12px;
-      border: none;
-      font-size: 1rem;
-      margin-bottom: 10px;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      border-radius: 12px;
-      border: none;
-      background: #2b78e4;
-      color: #fff;
-      font-size: 1rem;
-      margin-bottom: 10px;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    li {
-      padding: 10px;
-      border-bottom: 1px solid rgba(255,255,255,.1);
-      cursor: pointer;
-    }
-
-    .hint {
-      opacity: .7;
-      font-size: .85rem;
-      margin-top: 10px;
-    }
-  </style>
+        .delete-btn { color: #e74c3c; background: none; border: none; font-size: 1.2rem; cursor: pointer; }
+        
+        .history-box { margin-top: 30px; padding: 15px; background: #f1f2f6; border-radius: 10px; font-size: 0.9rem; }
+    </style>
 </head>
-
 <body>
-  <div class="app">
-    <h1>🛒 Einkaufsliste</h1>
 
-    <input id="input" placeholder="z.B. Milch, Eier, Kaffee …" />
-    <button id="add">Hinzufügen</button>
-
-    <ul id="list"></ul>
-
-    <div class="hint">
-      ✔ Tippen = abhaken<br>
-      💾 Automatisch offline gespeichert
+<div class="app-container">
+    <h1>🛒 Smart Shopping</h1>
+    
+    <div class="input-section">
+        <input type="text" id="new-item" placeholder="Artikel hinzufügen..." autocomplete="off">
+        <button class="add-btn" onclick="addItem()">+</button>
     </div>
-  </div>
 
-  <script>
-    /* =========================
-       APP LOGIK (INLINE)
-    ========================= */
+    <ul id="list-container"></ul>
 
-    const input = document.getElementById("input");
-    const addBtn = document.getElementById("add");
-    const list = document.getElementById("list");
+    <div class="history-box">
+        <strong>💡 Preis-Check:</strong>
+        <div id="price-history">Trage Preise ein, um Vergleiche zu sehen.</div>
+    </div>
+</div>
 
-    let items = JSON.parse(localStorage.getItem("items") || "[]");
+<script>
+    let shoppingList = JSON.parse(localStorage.getItem('smart_list')) || [];
+    let priceDatabase = JSON.parse(localStorage.getItem('price_db')) || {};
 
-    function render() {
-      list.innerHTML = "";
-      items.forEach((item, i) => {
-        const li = document.createElement("li");
-        li.textContent = item;
-        li.onclick = () => {
-          items.splice(i, 1);
-          save();
-        };
-        list.appendChild(li);
-      });
+    function addItem() {
+        const input = document.getElementById('new-item');
+        if (input.value.trim() === '') return;
+        
+        shoppingList.push({
+            name: input.value.trim(),
+            inCart: false,
+            lastPrice: priceDatabase[input.value.trim()]?.price || null,
+            lastStore: priceDatabase[input.value.trim()]?.store || null
+        });
+        
+        input.value = '';
+        saveAndRender();
     }
 
-    function save() {
-      localStorage.setItem("items", JSON.stringify(items));
-      render();
+    function toggleCart(index) {
+        shoppingList[index].inCart = !shoppingList[index].inCart;
+        saveAndRender();
     }
 
-    addBtn.onclick = () => {
-      if (!input.value.trim()) return;
-      items.push(input.value.trim());
-      input.value = "";
-      save();
-    };
+    function saveReceipt(index) {
+        const store = document.getElementById(`store-${index}`).value;
+        const price = document.getElementById(`price-${index}`).value;
+        const itemName = shoppingList[index].name;
 
-    input.addEventListener("keydown", e => {
-      if (e.key === "Enter") addBtn.click();
-    });
-
-    render();
-
-    /* =========================
-       SERVICE WORKER REGISTER
-    ========================= */
-
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/einkaufsliste/sw.js");
-      });
+        if (price) {
+            priceDatabase[itemName] = { price: price, store: store, date: new Date().toLocaleDateString() };
+            localStorage.setItem('price_db', JSON.stringify(priceDatabase));
+            alert(`Gespeichert: ${itemName} für ${price}€ bei ${store}`);
+            renderHistory();
+        }
     }
-  </script>
+
+    function deleteItem(index) {
+        shoppingList.splice(index, 1);
+        saveAndRender();
+    }
+
+    function saveAndRender() {
+        localStorage.setItem('smart_list', JSON.stringify(shoppingList));
+        renderList();
+        renderHistory();
+    }
+
+    function renderList() {
+        const container = document.getElementById('list-container');
+        container.innerHTML = '';
+
+        shoppingList.forEach((item, i) => {
+            const li = document.createElement('li');
+            const historyInfo = priceDatabase[item.name] 
+                ? `<span class="price-tag">Letzter Preis: ${priceDatabase[item.name].price}€ (${priceDatabase[item.name].store})</span>` 
+                : '<span class="price-tag">Noch kein Preis bekannt</span>';
+
+            li.innerHTML = `
+                <div class="item-row">
+                    <div class="item-info ${item.inCart ? 'done' : ''}" onclick="toggleCart(${i})">
+                        <span class="item-name">${item.inCart ? '✅' : '⚪'} ${item.name}</span>
+                        ${historyInfo}
+                    </div>
+                    <button class="delete-btn" onclick="deleteItem(${i})">✕</button>
+                </div>
+                ${item.inCart ? `
+                    <div class="receipt-area">
+                        <input type="text" id="store-${i}" placeholder="Laden (z.B. Aldi)">
+                        <input type="number" id="price-${i}" placeholder="Preis €" step="0.01">
+                        <button class="save-price-btn" onclick="saveReceipt(${i})">Speichern</button>
+                    </div>
+                ` : ''}
+            `;
+            container.appendChild(li);
+        });
+    }
+
+    function renderHistory() {
+        const historyDiv = document.getElementById('price-history');
+        if (Object.keys(priceDatabase).length === 0) return;
+        
+        let html = '<ul>';
+        for (let name in priceDatabase) {
+            html += `<li>${name}: <b>${priceDatabase[name].price}€</b> bei ${priceDatabase[name].store}</li>`;
+        }
+        html += '</ul>';
+        historyDiv.innerHTML = html;
+    }
+
+    // Initiales Rendern
+    saveAndRender();
+</script>
 </body>
 </html>
