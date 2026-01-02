@@ -27,80 +27,92 @@
             --shadow: rgba(0, 0, 0, 0.2);
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: all 0.25s ease; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: all 0.2s ease; }
 
         body {
-            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            font-family: 'Inter', -apple-system, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
-            padding: 20px 15px env(safe-area-inset-bottom);
+            padding: 20px 15px 40px;
             display: flex;
             justify-content: center;
             min-height: 100vh;
+            overflow-x: hidden; /* Verhindert horizontales Scrollen */
         }
 
-        .dashboard { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 20px; }
+        .dashboard { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 16px; }
 
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        .header { display: flex; justify-content: space-between; align-items: center; }
         .logo-area { display: flex; align-items: center; gap: 8px; }
-        h1 { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; margin: 0; background: linear-gradient(90deg, var(--primary), #7209b7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h1 { font-size: 1.4rem; font-weight: 800; margin: 0; background: linear-gradient(90deg, var(--primary), #7209b7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         .theme-toggle {
             background: var(--card); border: 1px solid var(--border); color: var(--text);
-            width: 42px; height: 42px; border-radius: 12px; cursor: pointer;
+            width: 40px; height: 40px; border-radius: 10px; cursor: pointer;
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 4px 6px var(--shadow);
         }
 
         .budget-card {
-            background: var(--card); border-radius: 24px; padding: 24px;
-            box-shadow: 0 10px 25px var(--shadow); border: 1px solid var(--border);
-            position: relative; overflow: hidden;
+            background: var(--card); border-radius: 20px; padding: 20px;
+            box-shadow: 0 8px 20px var(--shadow); border: 1px solid var(--border);
         }
 
-        .budget-val { font-size: 2.5rem; font-weight: 800; color: var(--text); margin: 8px 0; letter-spacing: -1px; display: flex; align-items: center; gap: 10px; }
-        .label-row { display: flex; align-items: center; gap: 5px; font-size: 0.7rem; color: var(--muted); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+        .budget-val { font-size: 2.2rem; font-weight: 800; color: var(--text); margin: 6px 0; }
+        .label-row { display: flex; align-items: center; gap: 6px; font-size: 0.7rem; color: var(--muted); text-transform: uppercase; font-weight: 700; }
 
+        /* Eingabebereich korrigiert */
         .input-group { 
-            display: flex; gap: 10px; background: var(--card); padding: 8px; border-radius: 18px; 
-            border: 1px solid var(--border); box-shadow: 0 4px 12px var(--shadow); align-items: center;
+            display: flex; gap: 8px; background: var(--card); padding: 6px; border-radius: 14px; 
+            border: 1px solid var(--border); box-shadow: 0 4px 10px var(--shadow); align-items: center;
+            width: 100%;
         }
         
-        .input-group input { flex: 1; border: none; padding: 12px 10px; font-size: 1rem; outline: none; background: transparent; color: var(--text); }
+        .input-group input { flex: 1; border: none; padding: 10px; font-size: 1rem; outline: none; background: transparent; color: var(--text); min-width: 0; }
         
         .add-btn { 
-            background: var(--primary); color: white; border: none; width: 45px; height: 45px;
-            border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
+            background: var(--primary); color: white; border: none; width: 42px; height: 42px;
+            border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; /* Verhindert, dass der Button gequetscht wird */
         }
 
         .item-card { 
-            background: var(--card); border-radius: 18px; padding: 16px; 
-            border: 1px solid var(--border); margin-bottom: 12px;
-            box-shadow: 0 2px 6px var(--shadow);
+            background: var(--card); border-radius: 16px; padding: 14px; 
+            border: 1px solid var(--border); margin-bottom: 10px;
+            box-shadow: 0 2px 4px var(--shadow);
         }
         
-        .item-main { display: flex; justify-content: space-between; align-items: center; }
-        .item-name { font-weight: 700; font-size: 1.1rem; color: var(--text); }
+        .item-main { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        .item-name { font-weight: 700; font-size: 1.05rem; word-break: break-word; }
         
         .saving-tip { 
             background: rgba(6, 214, 160, 0.1); color: #06d6a0; border: 1px solid rgba(6, 214, 160, 0.2);
-            padding: 6px 12px; border-radius: 10px; font-size: 0.75rem; margin-top: 12px; display: inline-flex; align-items: center; gap: 6px;
+            padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; margin-top: 10px; display: inline-flex; align-items: center; gap: 5px;
         }
 
-        .price-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); }
-        .price-row input { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px; font-size: 0.9rem; color: var(--text); outline: none; }
+        /* Preis-Zeile innerhalb der Karte gefixt */
+        .price-row { 
+            display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; 
+            border-top: 1px solid var(--border); width: 100%;
+        }
         
-        .ok-btn { background: var(--safe-green); color: white; border: none; border-radius: 10px; width: 45px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .price-row input { 
+            background: var(--bg); border: 1px solid var(--border); border-radius: 8px; 
+            padding: 10px; font-size: 0.9rem; color: var(--text); outline: none; width: 100%; min-width: 0;
+        }
+        
+        .ok-btn { 
+            background: var(--safe-green); color: white; border: none; border-radius: 8px; 
+            width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; flex-shrink: 0;
+        }
 
-        .progress-container { background: var(--border); height: 8px; border-radius: 10px; margin-top: 20px; overflow: hidden; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #4cc9f0); border-radius: 10px; }
+        .progress-container { background: var(--border); height: 6px; border-radius: 10px; margin-top: 16px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #4cc9f0); }
         
-        .done { opacity: 0.6; transform: scale(0.98); }
-        .config-btn { background: none; border: none; color: var(--muted); font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; }
-        
-        .mi { font-size: 1.2rem; } /* Helper class for Material Icons */
+        .done { opacity: 0.6; }
+        .icon-btn { background: none; border: none; color: var(--muted); cursor: pointer; padding: 4px; display: flex; align-items: center; }
     </style>
 </head>
 <body data-theme="light">
@@ -108,48 +120,40 @@
 <div class="dashboard">
     <div class="header">
         <div class="logo-area">
-            <span class="material-icons-round" style="color: var(--primary)">shopping_bag</span>
+            <span class="material-icons-round" style="color: var(--primary)">shopping_basket</span>
             <h1>Smart List</h1>
         </div>
-        <div style="display: flex; gap: 12px; align-items: center;">
-            <button class="config-btn" onclick="setBudget()">
-                <span class="material-icons-round mi">settings</span>
-            </button>
-            <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">
-                <span class="material-icons-round">dark_mode</span>
-            </button>
+        <div style="display: flex; gap: 8px;">
+            <button class="icon-btn" onclick="setBudget()"><span class="material-icons-round">tune</span></button>
+            <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn"><span class="material-icons-round">dark_mode</span></button>
         </div>
     </div>
 
     <div class="budget-card">
-        <div class="label-row">
-            <span class="material-icons-round" style="font-size: 14px">account_balance_wallet</span>
-            Verfügbares Budget
-        </div>
+        <div class="label-row"><span class="material-icons-round" style="font-size: 14px">payments</span> Budget Rest</div>
         <div class="budget-val" id="rem-budget">0.00€</div>
-        <div style="display:flex; justify-content:space-between; font-size:0.85rem; color:var(--muted); font-weight: 600; margin-top: 5px;">
-            <span id="save-potential" style="color: var(--safe-green); display: flex; align-items: center; gap: 4px;">
-                <span class="material-icons-round" style="font-size: 16px">auto_awesome</span> Chance: 0.00€
+        <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight: 600;">
+            <span id="save-potential" style="color: var(--safe-green); display: flex; align-items: center; gap: 3px;">
+                <span class="material-icons-round" style="font-size: 14px">auto_awesome</span> 0.00€
             </span>
-            <span id="spent-info" style="display: flex; align-items: center; gap: 4px;">
-                <span class="material-icons-round" style="font-size: 16px">receipt_long</span> Woche: 0.00€
+            <span id="spent-info" style="color: var(--muted); display: flex; align-items: center; gap: 3px;">
+                <span class="material-icons-round" style="font-size: 14px">history</span> Woche: 0.00€
             </span>
         </div>
         <div class="progress-container"><div class="progress-fill" id="budget-bar"></div></div>
     </div>
 
     <div class="input-group">
-        <span class="material-icons-round" style="color: var(--muted); margin-left: 10px;">add_shopping_cart</span>
-        <input type="text" id="new-item" placeholder="Was fehlt noch?" autocomplete="off">
-        <button class="add-btn" onclick="addItem()">
-            <span class="material-icons-round">add</span>
-        </button>
+        <span class="material-icons-round" style="color: var(--muted); margin-left: 8px;">search</span>
+        <input type="text" id="new-item" placeholder="Was kaufst du?" autocomplete="off">
+        <button class="add-btn" onclick="addItem()"><span class="material-icons-round">add</span></button>
     </div>
 
     <div id="list-container"></div>
 </div>
 
 <script>
+    // Logik bleibt für Datenerhalt identisch
     let shoppingList = JSON.parse(localStorage.getItem('smart_list')) || [];
     let priceDatabase = JSON.parse(localStorage.getItem('price_db')) || {};
     let purchaseHistory = JSON.parse(localStorage.getItem('purchase_history')) || [];
@@ -159,14 +163,14 @@
         const current = document.body.getAttribute('data-theme');
         const next = current === 'light' ? 'dark' : 'light';
         document.body.setAttribute('data-theme', next);
-        document.getElementById('theme-btn').innerHTML = next === 'light' ? '<span class="material-icons-round">dark_mode</span>' : '<span class="material-icons-round">light_mode</span>';
+        document.getElementById('theme-btn').innerHTML = `<span class="material-icons-round">${next === 'light' ? 'dark_mode' : 'light_mode'}</span>`;
         localStorage.setItem('theme', next);
     }
 
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
         document.body.setAttribute('data-theme', savedTheme);
-        document.getElementById('theme-btn').innerHTML = savedTheme === 'light' ? '<span class="material-icons-round">dark_mode</span>' : '<span class="material-icons-round">light_mode</span>';
+        document.getElementById('theme-btn').innerHTML = `<span class="material-icons-round">${savedTheme === 'light' ? 'dark_mode' : 'light_mode'}</span>`;
     }
 
     function addItem() {
@@ -215,7 +219,7 @@
                 const lastPrice = history[history.length - 1].price;
                 if(minPrice < lastPrice) {
                     potentialTotal += (lastPrice - minPrice);
-                    tip = `<div class="saving-tip"><span class="material-icons-round" style="font-size:14px">info</span> Günstiger bei ${history.find(h => h.price === minPrice).store}</div>`;
+                    tip = `<div class="saving-tip"><span class="material-icons-round" style="font-size:14px">savings</span> ${history.find(h => h.price === minPrice).store}</div>`;
                 }
             }
 
@@ -223,23 +227,19 @@
             div.className = `item-card ${item.inCart ? 'done' : ''}`;
             div.innerHTML = `
                 <div class="item-main">
-                    <div style="flex:1; display:flex; align-items:center; gap:10px;" onclick="toggleCart(${i})">
-                        <span class="material-icons-round" style="color: ${item.inCart ? 'var(--primary)' : 'var(--muted)'}">${item.inCart ? 'check_circle' : 'radio_button_unchecked'}</span>
+                    <div style="flex:1; display:flex; align-items:center; gap:12px;" onclick="toggleCart(${i})">
+                        <span class="material-icons-round" style="color: ${item.inCart ? 'var(--primary)' : 'var(--border)'}">${item.inCart ? 'check_circle' : 'panorama_fish_eye'}</span>
                         <div>
                             <div class="item-name">${item.name}</div>
                             ${tip}
                         </div>
                     </div>
-                    <button onclick="shoppingList.splice(${i},1); saveAndRender()" style="background:none; border:none; color:var(--muted); cursor:pointer;">
-                        <span class="material-icons-round">delete_outline</span>
-                    </button>
+                    <button class="icon-btn" onclick="shoppingList.splice(${i},1); saveAndRender()"><span class="material-icons-round">close</span></button>
                 </div>
                 ${item.inCart ? `<div class="price-row">
                     <input type="text" id="store-${i}" placeholder="Laden">
                     <input type="text" id="price-${i}" placeholder="€">
-                    <button class="ok-btn" onclick="savePrice(${i})">
-                        <span class="material-icons-round">done</span>
-                    </button>
+                    <button class="ok-btn" onclick="savePrice(${i})"><span class="material-icons-round">done</span></button>
                 </div>` : ''}
             `;
             container.appendChild(div);
@@ -249,13 +249,13 @@
         const weekSpent = purchaseHistory.filter(p => p.timestamp > oneWeekAgo).reduce((s, p) => s + p.price, 0);
         const remaining = weeklyLimit - weekSpent;
         document.getElementById('rem-budget').innerText = remaining.toFixed(2) + "€";
-        document.getElementById('spent-info').innerHTML = `<span class="material-icons-round" style="font-size: 16px">receipt_long</span> Woche: ${weekSpent.toFixed(2)}€`;
-        document.getElementById('save-potential').innerHTML = `<span class="material-icons-round" style="font-size: 16px">auto_awesome</span> Chance: ${potentialTotal.toFixed(2)}€`;
+        document.getElementById('spent-info').innerHTML = `<span class="material-icons-round" style="font-size: 14px">history</span> Woche: ${weekSpent.toFixed(2)}€`;
+        document.getElementById('save-potential').innerHTML = `<span class="material-icons-round" style="font-size: 14px">auto_awesome</span> Chance: ${potentialTotal.toFixed(2)}€`;
         document.getElementById('budget-bar').style.width = Math.min((weekSpent / weeklyLimit) * 100, 100) + "%";
     }
 
     function setBudget() {
-        const b = prompt("Wochen-Limit festlegen:", weeklyLimit);
+        const b = prompt("Wochenlimit:", weeklyLimit);
         if(b) { weeklyLimit = parseFloat(b.replace(',','.')); localStorage.setItem('weekly_limit', weeklyLimit); render(); }
     }
     render();
