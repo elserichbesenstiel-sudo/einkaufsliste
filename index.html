@@ -3,99 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>EINKAUFSLISTE</title>
+    <title>Smart List Premium</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <style>
         :root {
-            --neon-blue: #00d2ff;
-            --neon-orange: #ff9f43;
-            --bg-dark: #0a0b10;
-            --glass: rgba(20, 22, 30, 0.9);
-            --border: rgba(0, 210, 255, 0.4);
-            --text: #e0e6ed;
+            --bg: #f2f4f7;
+            --card: #ffffff;
+            --primary: #4361ee;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: rgba(0, 0, 0, 0.05);
+            --safe-green: #06d6a0;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        [data-theme="dark"] {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --primary: #4895ef;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --border: #334155;
+            --shadow: rgba(0, 0, 0, 0.2);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: all 0.25s ease; }
 
         body {
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg-dark);
-            background-image: radial-gradient(circle at 50% 0%, #1a1c2c 0%, #0a0b10 100%);
-            background-attachment: fixed;
-            background-size: cover;
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background-color: var(--bg);
             color: var(--text);
             margin: 0;
-            padding: 20px 15px 40px 15px;
+            padding: 20px 15px env(safe-area-inset-bottom);
             display: flex;
             justify-content: center;
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
-        .dashboard { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 15px; }
+        .dashboard { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 20px; }
 
-        .header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 5px; }
-        h1 { color: var(--neon-orange); font-size: 1.1rem; text-transform: uppercase; letter-spacing: 2px; margin: 0; text-shadow: 0 0 10px rgba(255, 159, 67, 0.5); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        .logo-area { display: flex; align-items: center; gap: 8px; }
+        h1 { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; margin: 0; background: linear-gradient(90deg, var(--primary), #7209b7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .neon-card {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: 15px;
-            padding: 18px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            position: relative;
+        .theme-toggle {
+            background: var(--card); border: 1px solid var(--border); color: var(--text);
+            width: 42px; height: 42px; border-radius: 12px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 6px var(--shadow);
         }
 
-        .neon-card::after {
-            content: ""; position: absolute; top: 0; left: 0; width: 3px; height: 100%;
-            background: var(--neon-blue); box-shadow: 0 0 8px var(--neon-blue); border-radius: 15px 0 0 15px;
+        .budget-card {
+            background: var(--card); border-radius: 24px; padding: 24px;
+            box-shadow: 0 10px 25px var(--shadow); border: 1px solid var(--border);
+            position: relative; overflow: hidden;
         }
 
-        .budget-val { font-size: 2.2rem; font-weight: bold; color: var(--neon-blue); text-shadow: 0 0 15px rgba(0, 210, 255, 0.6); margin: 5px 0; }
-        .label { font-size: 0.7rem; text-transform: uppercase; opacity: 0.6; letter-spacing: 1px; }
+        .budget-val { font-size: 2.5rem; font-weight: 800; color: var(--text); margin: 8px 0; letter-spacing: -1px; display: flex; align-items: center; gap: 10px; }
+        .label-row { display: flex; align-items: center; gap: 5px; font-size: 0.7rem; color: var(--muted); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
 
-        .input-card { display: flex; gap: 8px; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
-        input { flex: 1; background: transparent; border: none; color: white; font-size: 1rem; outline: none; }
+        .input-group { 
+            display: flex; gap: 10px; background: var(--card); padding: 8px; border-radius: 18px; 
+            border: 1px solid var(--border); box-shadow: 0 4px 12px var(--shadow); align-items: center;
+        }
         
-        .add-btn { background: var(--neon-orange); color: black; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; box-shadow: 0 0 10px var(--neon-orange); }
+        .input-group input { flex: 1; border: none; padding: 12px 10px; font-size: 1rem; outline: none; background: transparent; color: var(--text); }
+        
+        .add-btn { 
+            background: var(--primary); color: white; border: none; width: 45px; height: 45px;
+            border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
+        }
 
-        .item-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; margin-bottom: 10px; }
+        .item-card { 
+            background: var(--card); border-radius: 18px; padding: 16px; 
+            border: 1px solid var(--border); margin-bottom: 12px;
+            box-shadow: 0 2px 6px var(--shadow);
+        }
+        
         .item-main { display: flex; justify-content: space-between; align-items: center; }
-        .item-name { font-weight: bold; color: var(--neon-blue); text-transform: uppercase; font-size: 0.9rem; }
+        .item-name { font-weight: 700; font-size: 1.1rem; color: var(--text); }
         
-        .saving-tip { color: var(--neon-orange); font-size: 0.75rem; margin-top: 5px; font-weight: bold; }
+        .saving-tip { 
+            background: rgba(6, 214, 160, 0.1); color: #06d6a0; border: 1px solid rgba(6, 214, 160, 0.2);
+            padding: 6px 12px; border-radius: 10px; font-size: 0.75rem; margin-top: 12px; display: inline-flex; align-items: center; gap: 6px;
+        }
 
-        .price-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); }
-        .price-row input { background: rgba(255,255,255,0.05); border: 1px solid #333; border-radius: 4px; padding: 8px; font-size: 0.8rem; }
-        .ok-btn { background: var(--neon-blue); color: black; border: none; border-radius: 4px; padding: 0 15px; font-weight: bold; }
+        .price-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); }
+        .price-row input { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px; font-size: 0.9rem; color: var(--text); outline: none; }
+        
+        .ok-btn { background: var(--safe-green); color: white; border: none; border-radius: 10px; width: 45px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
-        .bar-bg { background: rgba(255,255,255,0.1); height: 4px; border-radius: 2px; margin-top: 15px; }
-        .bar-fill { height: 100%; background: var(--neon-blue); box-shadow: 0 0 8px var(--neon-blue); transition: width 0.5s; }
-        .done { opacity: 0.4; filter: grayscale(1); }
+        .progress-container { background: var(--border); height: 8px; border-radius: 10px; margin-top: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #4cc9f0); border-radius: 10px; }
+        
+        .done { opacity: 0.6; transform: scale(0.98); }
+        .config-btn { background: none; border: none; color: var(--muted); font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        
+        .mi { font-size: 1.2rem; } /* Helper class for Material Icons */
     </style>
 </head>
-<body>
+<body data-theme="light">
 
 <div class="dashboard">
     <div class="header">
-        <h1>Neon Saver Hub</h1>
-        <button onclick="setBudget()" style="background:none; border:1px solid var(--neon-blue); color:var(--neon-blue); font-size:0.6rem; border-radius:4px; padding:2px 8px;">CONFIG</button>
-    </div>
-
-    <div class="neon-card">
-        <div class="label">System Budget Remaining</div>
-        <div class="budget-val" id="rem-budget">0.00€</div>
-        <div style="display:flex; justify-content:space-between; font-size:0.7rem;">
-            <span id="save-potential" style="color:var(--neon-orange)">POTENTIAL: 0.00€</span>
-            <span id="spent-info">WEEK: 0.00€</span>
+        <div class="logo-area">
+            <span class="material-icons-round" style="color: var(--primary)">shopping_bag</span>
+            <h1>Smart List</h1>
         </div>
-        <div class="bar-bg"><div class="bar-fill" id="budget-bar" style="width: 0%"></div></div>
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <button class="config-btn" onclick="setBudget()">
+                <span class="material-icons-round mi">settings</span>
+            </button>
+            <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">
+                <span class="material-icons-round">dark_mode</span>
+            </button>
+        </div>
     </div>
 
-    <div class="input-card">
-        <input type="text" id="new-item" placeholder="SCAN ITEM..." autocomplete="off">
-        <button class="add-btn" onclick="addItem()">ADD</button>
+    <div class="budget-card">
+        <div class="label-row">
+            <span class="material-icons-round" style="font-size: 14px">account_balance_wallet</span>
+            Verfügbares Budget
+        </div>
+        <div class="budget-val" id="rem-budget">0.00€</div>
+        <div style="display:flex; justify-content:space-between; font-size:0.85rem; color:var(--muted); font-weight: 600; margin-top: 5px;">
+            <span id="save-potential" style="color: var(--safe-green); display: flex; align-items: center; gap: 4px;">
+                <span class="material-icons-round" style="font-size: 16px">auto_awesome</span> Chance: 0.00€
+            </span>
+            <span id="spent-info" style="display: flex; align-items: center; gap: 4px;">
+                <span class="material-icons-round" style="font-size: 16px">receipt_long</span> Woche: 0.00€
+            </span>
+        </div>
+        <div class="progress-container"><div class="progress-fill" id="budget-bar"></div></div>
+    </div>
+
+    <div class="input-group">
+        <span class="material-icons-round" style="color: var(--muted); margin-left: 10px;">add_shopping_cart</span>
+        <input type="text" id="new-item" placeholder="Was fehlt noch?" autocomplete="off">
+        <button class="add-btn" onclick="addItem()">
+            <span class="material-icons-round">add</span>
+        </button>
     </div>
 
     <div id="list-container"></div>
@@ -106,6 +154,20 @@
     let priceDatabase = JSON.parse(localStorage.getItem('price_db')) || {};
     let purchaseHistory = JSON.parse(localStorage.getItem('purchase_history')) || [];
     let weeklyLimit = parseFloat(localStorage.getItem('weekly_limit')) || 100.00;
+
+    function toggleTheme() {
+        const current = document.body.getAttribute('data-theme');
+        const next = current === 'light' ? 'dark' : 'light';
+        document.body.setAttribute('data-theme', next);
+        document.getElementById('theme-btn').innerHTML = next === 'light' ? '<span class="material-icons-round">dark_mode</span>' : '<span class="material-icons-round">light_mode</span>';
+        localStorage.setItem('theme', next);
+    }
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        document.body.setAttribute('data-theme', savedTheme);
+        document.getElementById('theme-btn').innerHTML = savedTheme === 'light' ? '<span class="material-icons-round">dark_mode</span>' : '<span class="material-icons-round">light_mode</span>';
+    }
 
     function addItem() {
         const input = document.getElementById('new-item');
@@ -121,9 +183,8 @@
     }
 
     function savePrice(index) {
-        const store = document.getElementById(`store-${index}`).value || '???';
-        const priceVal = document.getElementById(`price-${index}`).value.replace(',', '.');
-        const price = parseFloat(priceVal);
+        const store = document.getElementById(`store-${index}`).value || '?';
+        const price = parseFloat(document.getElementById(`price-${index}`).value.replace(',', '.'));
         if (price > 0) {
             const name = shoppingList[index].name;
             if (!priceDatabase[name]) priceDatabase[name] = [];
@@ -151,11 +212,10 @@
             let tip = '';
             if (history.length > 0) {
                 const minPrice = Math.min(...history.map(h => h.price));
-                const bestStore = history.find(h => h.price === minPrice).store;
                 const lastPrice = history[history.length - 1].price;
                 if(minPrice < lastPrice) {
                     potentialTotal += (lastPrice - minPrice);
-                    tip = `<div class="saving-tip">⚡ GÜNSTIGER BEI ${bestStore.toUpperCase()} (-${(lastPrice-minPrice).toFixed(2)}€)</div>`;
+                    tip = `<div class="saving-tip"><span class="material-icons-round" style="font-size:14px">info</span> Günstiger bei ${history.find(h => h.price === minPrice).store}</div>`;
                 }
             }
 
@@ -163,16 +223,23 @@
             div.className = `item-card ${item.inCart ? 'done' : ''}`;
             div.innerHTML = `
                 <div class="item-main">
-                    <div style="flex:1" onclick="toggleCart(${i})">
-                        <div class="item-name">${item.name}</div>
-                        ${tip}
+                    <div style="flex:1; display:flex; align-items:center; gap:10px;" onclick="toggleCart(${i})">
+                        <span class="material-icons-round" style="color: ${item.inCart ? 'var(--primary)' : 'var(--muted)'}">${item.inCart ? 'check_circle' : 'radio_button_unchecked'}</span>
+                        <div>
+                            <div class="item-name">${item.name}</div>
+                            ${tip}
+                        </div>
                     </div>
-                    <button onclick="shoppingList.splice(${i},1); saveAndRender()" style="background:none; border:none; color:var(--neon-orange); font-size:1.2rem;">✕</button>
+                    <button onclick="shoppingList.splice(${i},1); saveAndRender()" style="background:none; border:none; color:var(--muted); cursor:pointer;">
+                        <span class="material-icons-round">delete_outline</span>
+                    </button>
                 </div>
                 ${item.inCart ? `<div class="price-row">
-                    <input type="text" id="store-${i}" placeholder="STORE">
+                    <input type="text" id="store-${i}" placeholder="Laden">
                     <input type="text" id="price-${i}" placeholder="€">
-                    <button class="ok-btn" onclick="savePrice(${i})">OK</button>
+                    <button class="ok-btn" onclick="savePrice(${i})">
+                        <span class="material-icons-round">done</span>
+                    </button>
                 </div>` : ''}
             `;
             container.appendChild(div);
@@ -181,16 +248,14 @@
         const oneWeekAgo = new Date().getTime() - (7 * 24 * 60 * 60 * 1000);
         const weekSpent = purchaseHistory.filter(p => p.timestamp > oneWeekAgo).reduce((s, p) => s + p.price, 0);
         const remaining = weeklyLimit - weekSpent;
-        const perc = Math.min((weekSpent / weeklyLimit) * 100, 100);
-
         document.getElementById('rem-budget').innerText = remaining.toFixed(2) + "€";
-        document.getElementById('spent-info').innerText = `WEEK: ${weekSpent.toFixed(2)}€`;
-        document.getElementById('save-potential').innerText = `POTENTIAL: ${potentialTotal.toFixed(2)}€`;
-        document.getElementById('budget-bar').style.width = perc + "%";
+        document.getElementById('spent-info').innerHTML = `<span class="material-icons-round" style="font-size: 16px">receipt_long</span> Woche: ${weekSpent.toFixed(2)}€`;
+        document.getElementById('save-potential').innerHTML = `<span class="material-icons-round" style="font-size: 16px">auto_awesome</span> Chance: ${potentialTotal.toFixed(2)}€`;
+        document.getElementById('budget-bar').style.width = Math.min((weekSpent / weeklyLimit) * 100, 100) + "%";
     }
 
     function setBudget() {
-        const b = prompt("Weekly Limit:", weeklyLimit);
+        const b = prompt("Wochen-Limit festlegen:", weeklyLimit);
         if(b) { weeklyLimit = parseFloat(b.replace(',','.')); localStorage.setItem('weekly_limit', weeklyLimit); render(); }
     }
     render();
